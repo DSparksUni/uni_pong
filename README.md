@@ -1,2 +1,2 @@
-# uni_engine_js
-A game engine for the web written in pure javascript with an html canvas
+# Pong
+An implementation of the classic game Pong, written in javascript using the p5js library.
