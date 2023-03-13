@@ -4,8 +4,6 @@ let ball;
 
 let cnv;
 
-let scene_alpha = 255;
-
 let paused = false;
 
 const BACKGROUND_COLOR = {
@@ -34,7 +32,7 @@ const BALL_COLOR = {
 const BACKGROUND_ELLIPSE_SCALE_FACTOR = 1.5;
 
 function draw_background() {
-    stroke(0, 0, 0, scene_alpha);
+    stroke(0, 0, 0);
     strokeWeight(1.5);
     noFill();
     
@@ -90,23 +88,22 @@ function setup() {
 
 function draw() {
     background(
-        BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b,
-        scene_alpha
+        BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b
     );
 
     draw_background();
 
     player_paddle.draw(
         PLAYER_PADDLE_COLOR.r, PLAYER_PADDLE_COLOR.g,
-        PLAYER_PADDLE_COLOR.b, scene_alpha
+        PLAYER_PADDLE_COLOR.b
     );
     computer_paddle.draw(
         COMPUTER_PADDLE_COLOR.r, COMPUTER_PADDLE_COLOR.g,
-        COMPUTER_PADDLE_COLOR.b, scene_alpha
+        COMPUTER_PADDLE_COLOR.b
     );
 
     textSize(45);
-    fill(0, 0, 0, scene_alpha);
+    fill(0, 0, 0);
     rectMode(CORNER);
     textAlign(LEFT);
 
@@ -114,8 +111,7 @@ function draw() {
     text(computer_paddle.score, width / 4, 50);
 
     ball.draw(
-        BALL_COLOR.r, BALL_COLOR.g, BALL_COLOR.b,
-        scene_alpha
+        BALL_COLOR.r, BALL_COLOR.g, BALL_COLOR.b
     );
 
     if(!paused) {
@@ -129,6 +125,9 @@ function draw() {
         handle_collision(player_paddle);
         handle_collision(computer_paddle);
     } else {
+        fill(255, 255, 255, 130);
+        rect(0, 0, width, height);
+
         textSize(60);
         fill(0);
         textAlign(CENTER);
@@ -155,10 +154,6 @@ function keyPressed() {
             break;
         case ESCAPE:
             paused = !paused;
-
-            if(paused) scene_alpha = 25;
-            else scene_alpha = 255;
-
             break;
     }
 
