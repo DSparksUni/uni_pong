@@ -4,7 +4,13 @@ let ball;
 
 let cnv;
 
+let cnv_center = {
+    x: 0, y: 0
+};
+
 let paused = false;
+
+let restart_button;
 
 const BACKGROUND_COLOR = {
     r: 200, g: 200, b: 200
@@ -36,16 +42,16 @@ function draw_background() {
     strokeWeight(1.5);
     noFill();
     
-    line(width / 2, 0, width / 2, height);
+    line(cnv_center.x, 0, cnv_center.x, height);
     
     ellipseMode(CENTER);
-    ellipse(width / 2, height / 2, 150, 150);
+    ellipse(cnv_center.x, cnv_center.y, 150, 150);
     ellipse(
-        0, height / 2, height / BACKGROUND_ELLIPSE_SCALE_FACTOR,
+        0, cnv_center.y, height / BACKGROUND_ELLIPSE_SCALE_FACTOR,
         height / BACKGROUND_ELLIPSE_SCALE_FACTOR
     );
     ellipse(
-        width, height / 2, height / BACKGROUND_ELLIPSE_SCALE_FACTOR,
+        width, cnv_center.y, height / BACKGROUND_ELLIPSE_SCALE_FACTOR,
         height / BACKGROUND_ELLIPSE_SCALE_FACTOR
     );
 }
@@ -69,26 +75,49 @@ function computer_ai() {
 
 function setup() {
     cnv = createCanvas(700, 400);
-    cnv.position(
-        (windowWidth - width) / 2, 0
-    );
+    windowResized();
+
+    const PADDLE_POS_Y = cnv_center.y - (PADDLE_HEIGHT / 2);
 
     computer_paddle = new Paddle(
-        PADDLE_BORDER_OFFSET, (height / 2) - (PADDLE_HEIGHT / 2),
+        PADDLE_BORDER_OFFSET, PADDLE_POS_Y,
         PADDLE_WIDTH, PADDLE_HEIGHT
     );
 
     player_paddle = new Paddle(
         width - PADDLE_WIDTH - PADDLE_BORDER_OFFSET,
-        (height / 2) - (PADDLE_HEIGHT / 2),
-        PADDLE_WIDTH, PADDLE_HEIGHT
+        PADDLE_POS_Y, PADDLE_WIDTH, PADDLE_HEIGHT
     );
 
     ball = new Ball(
-        width / 2, height / 2,
+        cnv_center.x, cnv_center.y,
         BALL_RADIUS
     );
     ball.reset();
+
+    restart_button = new Button({
+        x: width / 2, y: height / 2,
+        width: 100, height: 50,
+        align_x: 0, align_y: 0,
+        content: "Restart",
+        on_press() {
+            player_paddle.reset();
+            computer_paddle.reset();
+            ball.reset();
+            paused = !paused;
+        }
+    });
+    restart_button.style("default", {
+        color: "#FFF",
+        background: "#00F",
+        text_size: 20
+    });
+    restart_button.style("hover", {
+        color: "#000",
+        background: "22F",
+        text_size: 20
+    });
+    restart_button.disable();
 }
 
 function draw() {
@@ -145,7 +174,10 @@ function draw() {
         fill(0);
         textAlign(CENTER);
         rectMode(CENTER);
-        text("Pause", width / 2, height / 4);
+        text("Pause", cnv_center.x, height / 4);
+
+        rectMode(CORNER);
+        restart_button.draw();
     }
 }
 
@@ -167,6 +199,10 @@ function keyPressed() {
             break;
         case ESCAPE:
             paused = !paused;
+
+            if(paused) restart_button.enable();
+            else restart_button.disable();
+
             break;
     }
 
@@ -212,4 +248,7 @@ function windowResized() {
     cnv.position(
         (windowWidth - width) / 2, 0
     );
+
+    cnv_center.x = width / 2;
+    cnv_center.y = height / 2;
 }
