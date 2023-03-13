@@ -62,6 +62,11 @@ function handle_collision(paddle) {
     }
 }
 
+function computer_ai() {
+    if(ball.y > computer_paddle.y) computer_paddle.yspd = PADDLE_SPEED;
+    else if(ball.y < computer_paddle.y) computer_paddle.yspd = -PADDLE_SPEED;
+}
+
 function setup() {
     cnv = createCanvas(700, 400);
     cnv.position(
@@ -120,7 +125,15 @@ function draw() {
         if(ball_state === 1) computer_paddle.score += 1;
         else if(ball_state === -1) player_paddle.score += 1;
 
+        if(ball_state != 0) {
+            player_paddle.reset();
+            computer_paddle.reset();
+        }
+
         player_paddle.update();
+
+        computer_ai();
+        computer_paddle.update();
 
         handle_collision(player_paddle);
         handle_collision(computer_paddle);

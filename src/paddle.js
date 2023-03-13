@@ -1,5 +1,8 @@
 class Paddle {
     constructor(x, y, w, h) {
+        this.orig_x = x;
+        this.orig_y = y;
+
         this.x = x;
         this.y = y;
 
@@ -24,6 +27,11 @@ class Paddle {
 
         if(this.y < 0) this.y = 0;
         else if(this.y + this.height > height) this.y = height - this.height;
+    }
+
+    reset() {
+        this.x = this.orig_x;
+        this.y = this.orig_y;
     }
 
     ball_collide(ball) {
